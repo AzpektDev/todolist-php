@@ -10,7 +10,7 @@
     $conn = mysqli_connect("localhost", "root", "", "todo_list");
   ?>
 
-
+  <a href="/todolist-php"><button><- go back</button></a>
   <h1>We're happy to see you!</h1>
   <p>Let's get started</p>
   <form method="POST">
