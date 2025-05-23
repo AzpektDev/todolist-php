@@ -8,22 +8,45 @@
 <body>
    <?php
       $conn = mysqli_connect("localhost", "root", "", "todo_list");
+      $res = mysqli_query($conn, "SELECT id FROM users WHERE username = '" . $login_session . "';");
+      $user_id = mysqli_fetch_assoc($res)['id'];
    ?>
 
    <h1>Welcome <?php echo $login_session; ?></h1> 
+
+   <div>
+      <h3>Add a task</h3>
+
+      <form method="POST">
+         <input type="text" placeholder="title" name="title">
+         <input type="text" placeholder="description" name="description">
+
+         <button type="submit">submit</button>
+      </form>
+      <?php 
+         if ($_POST) {
+            if ($_POST['title'] && $_POST['description']) {
+               $query = "INSERT INTO `todos` (user_id, title, description, status) VALUES (" . $user_id . ", '" . $_POST['title'] . "', '" . $_POST['description'] . "', 0);";
+               $res = mysqli_query($conn, $query);
+
+               header("Refresh: 0");
+            }
+         }
+      ?>
+   </div>
+
+   <hr/>
 
    <table>
       <tr>
          <th>id</th>
          <th>title</th>
          <th>description</th>
-         <th>status</th>
+         <th>status</th> 
+         <!-- ^^^^^^ change to completed??? -->
          <th>update status</th>
       </tr>
       <?php
-         $res = mysqli_query($conn, "SELECT id FROM users WHERE username = '" . $login_session . "';");
-         $user_id = mysqli_fetch_assoc($res)['id'];
-
          $tasks = mysqli_query($conn, "SELECT * FROM todos WHERE user_id = '" . $user_id . "';");
 
          while ($task=mysqli_fetch_assoc($tasks)) {
@@ -39,6 +62,8 @@
          // $query = "SELECT * FROM todos WHERE "
       ?>
    </table>
+
+   <hr/>
 
    <a href = "logout.php"><button>Sign Out</button></a>
 </body>
